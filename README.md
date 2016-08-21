@@ -26,6 +26,8 @@ The main hardware is: Raspberry Pi, NodeMCU (ESP8266)
 - [Friday Locks](http://www.fridaylock.com/)
 - [Lockitron](https://lockitron.com/)
 - [August Smart Lock and WiFi Door bell](http://august.com/)
+- [Pi Lock (RFID)](http://www.pi-lock.com/)
+
 
 License
 ---
