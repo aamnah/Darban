@@ -1,0 +1,31 @@
+{
+  "name": "darban",
+  "version": "1.0.0",
+  "description": "Smart lock ",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aamnah/darban.git"
+  },
+  "keywords": [
+    "smart",
+    "lock",
+    "raspberry",
+    "pi",
+    "nodemcu",
+    "esp8266"
+  ],
+  "author": "Aamnah Akram",
+  "license": "CC-BY-SA-4.0",
+  "bugs": {
+    "url": "https://github.com/aamnah/darban/issues"
+  },
+  "homepage": "https://github.com/aamnah/darban#readme",
+  "dependencies": {
+    "mqtt": "^1.14.0",
+    "socket.io": "^1.4.8"
+  }
+}
