@@ -1,19 +1,6 @@
-SSID="Makeistan"
-PASSWORD="arduinonight"
-BROKER1="192.168.0.112"
-BROKER2="192.168.0.200"
-ENDPOINT="smartlock/"
-PORT=1883
-ID="SmartLock: " .. wifi.sta.getmac()
-KEEPALIVE=18000
-USER=""
-PASS=""
-
-print(ID)
-
 -- wifi
 wifi.setmode(wifi.STATION)
-wifi.sta.config(SSID, PASSWORD)
+wifi.sta.config(config.SSID, config.PASSWORD)
 tmr.alarm(1, 5000, tmr.ALARM_SINGLE, function() 
   print(wifi.sta.getip())
 end)
@@ -33,14 +20,14 @@ function autolock()
   end
 end
 
-m = mqtt.Client(ID, KEEPALIVE, USER, PASS)
+m = mqtt.Client(config.ID, config.KEEPALIVE, config.USER, config.PASS)
 m:lwt("/lwt", "LWT LOST " ..wifi.sta.getmac(), 0, 0)
 
 m:on("offline", function(con) 
    print ("reconnecting...") 
    print(node.heap())
    tmr.alarm(1, 10000, 0, function()
-      m:connect(BROKER2, PORT, 0)
+      m:connect(config.BROKER2, config.PORT, 0)
    end)
 end)
 
@@ -55,7 +42,7 @@ end)
 tmr.alarm(0, 1000, 1, function()
  if wifi.sta.status() == 5 then
    tmr.stop(0)
-   m:connect(BROKER2, PORT, 0, function(conn) 
+   m:connect(config.BROKER2, config.PORT, 0, function(conn) 
       print("connected")
       m:subscribe("home/smartlock",0, function(conn) 
       m:publish("home/smartlock","hello form smartlock",0,0, function(conn) print("ack sent") end)
