@@ -3,7 +3,7 @@
 local module = {}
 
 -- vars
-LOCKPIN = 5
+module.LOCKPIN = 5
 
 -- WiFi
 module.SSID=""
