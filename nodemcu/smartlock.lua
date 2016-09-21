@@ -34,7 +34,9 @@ end)
 -- on publish message receive event
 m:on("message", function(conn, topic, data) 
   print(topic .. ":" ) 
-  if data ~= nil then
+  if data  == "autolock" then
+    autolock()
+  else
     print(data)
   end
 end)
@@ -45,7 +47,7 @@ tmr.alarm(0, 1000, 1, function()
    m:connect(config.BROKER2, config.PORT, 0, function(conn) 
       print("connected")
       m:subscribe("home/smartlock",0, function(conn) 
-      m:publish("home/smartlock","hello form smartlock",0,0, function(conn) print("ack sent") end)
+      m:publish("home/smartlock","hello form smartlock", 0, 0, function(conn) print("ack sent") end)
       end)
    end)
  end
