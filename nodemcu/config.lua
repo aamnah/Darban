@@ -2,6 +2,9 @@
 
 local module = {}
 
+-- vars
+LOCKPIN = 5
+
 -- WiFi
 module.SSID=""
 module.PASSWORD=""
