@@ -10,6 +10,7 @@ module.ENDPOINT="smartlock/"
 module.PORT=1883
 module.ID="SmartLock: " .. wifi.sta.getmac()
 module.KEEPALIVE=18000
+module.QOS=2 --exactly once
 module.USER=""
 module.PASS=""
 
