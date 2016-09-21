@@ -31,25 +31,24 @@ end)
 
 -- on publish message receive event
 m:on("message", function(conn, topic, data) 
-  print(topic .. ":" ) 
   if data  == "autolock" then
     autolock()
   else
-    print(data)
+    print(topic .. ": " .. data)
   end
 end)
 
 tmr.alarm(1, 1000, 1, function()
- if wifi.sta.status() == 5 then -- 5: STA_GOTIP
-   tmr.stop(1)
-   m:connect(config.BROKER2, config.PORT, 0, function(conn) 
-      print("connected")
+  if wifi.sta.status() == 5 then -- 5: STA_GOTIP
+    tmr.stop(1)
+    m:connect(config.BROKER2, config.PORT, 0, function(conn) 
+      print("Connected to MQTT Broker.")
       m:subscribe("home/smartlock", config.QOS, function(conn) 
-        m:publish("home/smartlock", "SmartLock has connected.", config.QOS, 0, 
-          function(conn) 
-              print("ack sent") 
-          end)
+        m:publish("home/smartlock", "SmartLock is ONLINE", config.QOS, 0, 
+        function(conn) 
+          print("ACK sent") 
         end)
-   end)
- end
+      end)
+    end)
+  end
 end)
