@@ -6,28 +6,26 @@ tmr.alarm(0, 5000, tmr.ALARM_SINGLE, function()
 end)
 
 -- lock
-lockPin = 5
-gpio.mode(lockPin, gpio.OUTPUT)
-
 function autolock()
-  gpio.write(lockPin, gpio.HIGH)
+  gpio.mode(config.LOCKPIN, gpio.OUTPUT)
+  gpio.write(config.LOCKPIN, gpio.HIGH)
   print("UNLOCKED")
-  if gpio.read(lockPin) == 1 then
+  if gpio.read(config.LOCKPIN) == 1 then
     tmr.alarm(3, 5000, tmr.ALARM_SINGLE, function() 
-      gpio.write(lockPin, gpio.LOW)
+      gpio.write(config.LOCKPIN, gpio.LOW)
       print("Door has been automatically LOCKED after 5 seconds.")
     end)
   end
 end
 
 m = mqtt.Client(config.ID, config.KEEPALIVE, config.USER, config.PASS)
-m:lwt("/lwt", "SmartLock LOST " ..wifi.sta.getmac(), 0, 0)
+m:lwt("/lwt", "SmartLock LOST " ..wifi.sta.getmac(), config.QOS, 0)
 
 m:on("offline", function(con) 
    print ("reconnecting...") 
    print(node.heap())
    tmr.alarm(2, 10000, 0, function()
-      m:connect(config.BROKER2, config.PORT, 0)
+      m:connect(config.BROKER2, config.PORT, 0) --0/false = non-secure
    end)
 end)
 
@@ -42,12 +40,12 @@ m:on("message", function(conn, topic, data)
 end)
 
 tmr.alarm(1, 1000, 1, function()
- if wifi.sta.status() == 5 then
+ if wifi.sta.status() == 5 then -- 5: STA_GOTIP
    tmr.stop(1)
    m:connect(config.BROKER2, config.PORT, 0, function(conn) 
       print("connected")
-      m:subscribe("home/smartlock", 0, function(conn) 
-        m:publish("home/smartlock", "SmartLock has connected.", 0, 0, 
+      m:subscribe("home/smartlock", config.QOS, function(conn) 
+        m:publish("home/smartlock", "SmartLock has connected.", config.QOS, 0, 
           function(conn) 
               print("ack sent") 
           end)
