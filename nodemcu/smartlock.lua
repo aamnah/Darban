@@ -6,7 +6,7 @@ tmr.alarm(0, 5000, tmr.ALARM_SINGLE, function()
 end)
 
 -- LOCK
-function autolock()
+function unlock()
   gpio.mode(config.LOCKPIN, gpio.OUTPUT)
   gpio.write(config.LOCKPIN, gpio.HIGH)
   m:publish("home/smartlock", "UNLOCKED", config.QOS, 0, 
@@ -14,12 +14,8 @@ function autolock()
     print("UNLOCKED")
   end)  
   if gpio.read(config.LOCKPIN) == 1 then
-    tmr.alarm(3, 3000, tmr.ALARM_SINGLE, function() 
+    tmr.alarm(3, 1000, tmr.ALARM_SINGLE, function() 
       gpio.write(config.LOCKPIN, gpio.LOW)
-      m:publish(config.ENDPOINT, "Door has been automatically RESET after 3 seconds.", config.QOS, 0, 
-      function(conn) 
-        print("Door has been automatically RESET after 3 seconds.")      
-      end)
     end)
   end
 end
@@ -37,8 +33,8 @@ m:on("offline", function(con)
 end)
 
 m:on("message", function(conn, topic, data) 
-  if data == "autolock" then
-    autolock()
+  if data == "unlock" then
+    unlock()
   elseif data == "restart" then
     m:publish(config.ENDPOINT, "Restarting.. ", config.QOS, 0, function(conn) 
       node.restart()
