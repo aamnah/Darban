@@ -14,11 +14,11 @@ function autolock()
     print("UNLOCKED")
   end)  
   if gpio.read(config.LOCKPIN) == 1 then
-    tmr.alarm(3, 5000, tmr.ALARM_SINGLE, function() 
+    tmr.alarm(3, 3000, tmr.ALARM_SINGLE, function() 
       gpio.write(config.LOCKPIN, gpio.LOW)
-      m:publish(config.ENDPOINT, "Door has been automatically LOCKED after 5 seconds.", config.QOS, 0, 
+      m:publish(config.ENDPOINT, "Door has been automatically RESET after 3 seconds.", config.QOS, 0, 
       function(conn) 
-        print("Door has been automatically LOCKED after 5 seconds.")      
+        print("Door has been automatically RESET after 3 seconds.")      
       end)
     end)
   end
@@ -54,9 +54,7 @@ m:on("message", function(conn, topic, data)
   elseif data == "chipinfo" then
     func.chipinfo()
   else
-    m:publish(config.ENDPOINT, "Invalid command", config.QOS, 0, function(conn)
-      print(topic .. ": " .. data)
-    end)
+    print(topic .. ": " .. data)
   end
 end)
 
