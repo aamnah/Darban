@@ -7,15 +7,18 @@ end)
 
 -- LOCK
 function unlock()
-  gpio.mode(config.LOCKPIN, gpio.OUTPUT)
-  gpio.write(config.LOCKPIN, gpio.HIGH)
+  gpio.mode(config.Pin_LockTrigger, gpio.OUTPUT)
+  gpio.mode(config.Pin_LockStatusLED, gpio.OUTPUT)
+  gpio.write(config.Pin_LockTrigger, gpio.HIGH)
+  gpio.write(config.Pin_LockStatusLED, gpio.HIGH)
   m:publish("home/smartlock", "UNLOCKED", config.QOS, 0, 
   function(conn) 
     print("UNLOCKED")
   end)  
-  if gpio.read(config.LOCKPIN) == 1 then
+  if gpio.read(config.Pin_LockTrigger) == 1 then
     tmr.alarm(3, 1000, tmr.ALARM_SINGLE, function() 
-      gpio.write(config.LOCKPIN, gpio.LOW)
+      gpio.write(config.Pin_LockTrigger, gpio.LOW)
+      gpio.write(config.Pin_LockStatusLED, gpio.LOW)
     end)
   end
 end
@@ -59,6 +62,8 @@ tmr.alarm(1, 1000, 1, function()
     tmr.stop(1)
     m:connect(config.BROKER2, config.PORT, 0, function(conn) 
       print("Connected to MQTT Broker.")
+      gpio.mode(config.Pin_SystemStatusLED, gpio.OUTPUT)
+      gpio.write(config.Pin_SystemStatusLED, gpio.HIGH)      
       m:subscribe("home/smartlock", config.QOS, function(conn) 
         m:publish("home/smartlock", "SmartLock is ONLINE. MAC: ".. wifi.sta.getmac() .. " IP: " ..wifi.sta.getip(), config.QOS, 0, 
         function(conn) 
