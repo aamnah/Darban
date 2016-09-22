@@ -4,6 +4,9 @@ local module = {}
 
 -- vars
 module.LOCKPIN = 5
+module.Pin_LockTrigger = 5
+module.Pin_LockStatusLED = 3
+module.Pin_SystemStatusLED = 2 
 
 -- WiFi
 module.SSID=""
