@@ -43,7 +43,7 @@ m:on("message", function(conn, topic, data)
       node.restart()
     end)
   elseif data == "info" then
-    m:publish(config.ENDPOINT, lang.payload_info, config.QOS, 0, function(conn) 
+    m:publish(config.ENDPOINT, "ABOUT: This device is a smart lock.\n LOCATION: Main Gate\n", config.QOS, 0, function(conn) 
       func.info()
     end)
   elseif data == "sysinfo" then
