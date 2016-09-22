@@ -9,12 +9,17 @@ end)
 function autolock()
   gpio.mode(config.LOCKPIN, gpio.OUTPUT)
   gpio.write(config.LOCKPIN, gpio.HIGH)
-  print("UNLOCKED")
+  m:publish("home/smartlock", "UNLOCKED", config.QOS, 0, 
+  function(conn) 
+    print("UNLOCKED")
+  end)  
   if gpio.read(config.LOCKPIN) == 1 then
     tmr.alarm(3, 5000, tmr.ALARM_SINGLE, function() 
       gpio.write(config.LOCKPIN, gpio.LOW)
-      m:publish(config.ENDPOINT, "Door has been automatically LOCKED after 5 seconds.", 2, 0)
-      print("Door has been automatically LOCKED after 5 seconds.")
+      m:publish(config.ENDPOINT, "Door has been automatically LOCKED after 5 seconds.", config.QOS, 0, 
+      function(conn) 
+        print("Door has been automatically LOCKED after 5 seconds.")      
+      end)
     end)
   end
 end
